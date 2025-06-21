@@ -1,8 +1,5 @@
 function sendEmail() {
-  const tobeSendArticles = fetchArticlesFromSheet();
-  const htmlContent = buildNewsletterHTML(tobeSendArticles);
-
-  const subject = "Your Daily Tech Newsletter(TL;DR)";
+  const subject = "Your Daily Tech Newsletter";
 
   // TODO read recipients from sheet
   const recipients = [].join(",");
