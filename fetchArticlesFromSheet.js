@@ -2,7 +2,7 @@ function fetchArticlesFromSheet() {
   const spreadsheetId =
     PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
   const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
-  const sheet = spreadsheet.getSheetByName("Article");
+  const sheet = spreadsheet.getSheetByName("Articles");
 
   const data = sheet.getDataRange().getValues();
   const headers = data[0];
@@ -11,9 +11,9 @@ function fetchArticlesFromSheet() {
   const unsentArticles = [];
 
   rows.forEach((row, index) => {
-    const isSent = row[5];
+    const isMailSent = row[6];
 
-    if (isSent !== true && isSent !== "TRUE") {
+    if (isMailSent !== true && isMailSent !== "TRUE") {
       unsentArticles.push({
         rowIndex: index + 1,
         url: row[0],
@@ -21,11 +21,11 @@ function fetchArticlesFromSheet() {
         description: row[2],
         imageUrl: row[3],
         publishedAt: row[4],
-        isSent: row[5],
+        summary: row[5],
+        isMailSent: row[6],
       });
     }
   });
-
   Logger.log(unsentArticles);
   return unsentArticles;
 }
