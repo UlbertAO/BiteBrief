@@ -4,7 +4,7 @@ function buildNewsletterHTML(userName, userCategory, articles) {
   let html = `
     <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
       <p style="font-size: 1.1em; color: #333; margin-bottom: 10px;">${greetingName}</p>
-      <h2 style="color: #333; text-align: center; margin-bottom: 5px;">Your Daily ${userCategory}Digest</h2>
+      <h2 style="color: #333; text-align: center; margin-bottom: 5px;">Your daily ${userCategory} digest</h2>
       <p style="text-align: center; color: #666; font-size: 1em; margin-top: 0;">
         Stay informed with today's top ${userCategory} headlines curated just for you.
       </p>

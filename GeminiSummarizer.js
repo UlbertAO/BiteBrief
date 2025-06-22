@@ -42,8 +42,6 @@ URL: ${article.url}`;
 
     if (responseCode === 200) {
       const jsonResponse = JSON.parse(responseText);
-      // Gemini API response structure might vary slightly,
-      // but typically the generated text is in candidates[0].content.parts[0].text
       if (
         jsonResponse.candidates &&
         jsonResponse.candidates[0] &&
