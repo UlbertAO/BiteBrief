@@ -17,6 +17,9 @@ function app() {
 
       article.summary = newSummary;
       sheet.getRange(article.rowIndex + 1, 6).setValue(newSummary);
+
+      Logger.log(`Summary fetched for ${article.url}, waiting for 10 sec now`);
+      Utilities.sleep(10000); // if there is rate limiting
     });
 
     // build HTML content for newsletter per user filter with category

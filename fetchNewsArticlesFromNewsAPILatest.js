@@ -35,7 +35,7 @@ function fetchNewsArticlesFromNewsAPILatest() {
   finalCategories.forEach((category, index) => {
     const url = `https://newsapi.org/v2/top-headlines?apiKey=${newsApiKey}&category=${encodeURIComponent(
       category
-    )}&pageSize=100`;
+    )}&pageSize=10`;
 
     try {
       const response = UrlFetchApp.fetch(url);

@@ -11,7 +11,7 @@ function fetchArticlesFromSheet() {
   const unsentArticles = [];
 
   rows.forEach((row, index) => {
-    const isMailSent = row[6];
+    const isMailSent = row[7];
 
     if (isMailSent !== true && isMailSent !== "TRUE") {
       unsentArticles.push({
@@ -22,7 +22,8 @@ function fetchArticlesFromSheet() {
         imageUrl: row[3],
         publishedAt: row[4],
         summary: row[5],
-        isMailSent: row[6],
+        category: row[6],
+        isMailSent: row[7],
       });
     }
   });
