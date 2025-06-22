@@ -9,9 +9,9 @@ function sendEmail(unsentArticles) {
   const users = data.slice(1);
 
   users.forEach((row, index) => {
-    const userName = row[0];
-    const userEmail = row[1];
-    const userCategory = row[2];
+    const userName = row[0].trim();
+    const userEmail = row[1].trim();
+    const userCategory = row[2].trim();
 
     const subject = `Your Daily ${userCategory} Newsletter`;
     const htmlContent = buildNewsletterHTML(

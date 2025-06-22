@@ -11,7 +11,8 @@ function fetchNewsArticlesFromNewsAPILatest() {
     .getRange("B2:B")
     .getValues()
     .flat()
-    .filter(String);
+    .map((value) => (typeof value === "string" ? value.trim() : value))
+    .filter((value) => typeof value === "string" && value.length > 0);
 
   const userSubscribedCategories = [
     ...new Set(
@@ -20,7 +21,8 @@ function fetchNewsArticlesFromNewsAPILatest() {
         .getRange("C2:C")
         .getValues()
         .flat()
-        .filter(String)
+        .map((value) => (typeof value === "string" ? value.trim() : value))
+        .filter((value) => typeof value === "string" && value.length > 0)
     ),
   ];
   const finalCategories = userSubscribedCategories.filter((category) =>
