@@ -15,7 +15,7 @@ function fetchArticlesFromSheet() {
 
     if (isMailSent !== true && isMailSent !== "TRUE") {
       unsentArticles.push({
-        rowIndex: index + 1,
+        rowIndex: index + 2, //INDEX not sheet index
         url: row[0],
         title: row[1],
         description: row[2],

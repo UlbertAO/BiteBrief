@@ -30,5 +30,5 @@ function sendEmail(unsentArticles) {
     );
   });
 
-  Logger.log("Newsletter sent to: " + users.map(user => user[1].trim));
+  Logger.log("Newsletter sent to: " + users.map(user => user[1].trim()));
 }

@@ -26,7 +26,9 @@ function buildNewsletterHTML(userName, userCategory, articles) {
       article.title
     }</a>
             <p style="margin-top: 10px; color: #555; font-size: 0.95em; line-height: 1.5;">${
-              article.summary ?? article.document
+              article.summary?.trim()
+                ? article.summary.trim()
+                : article.description?.trim()
             }</p>
           </td>
         </tr>
