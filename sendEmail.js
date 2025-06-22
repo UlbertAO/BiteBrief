@@ -13,23 +13,30 @@ function sendEmail(unsentArticles) {
     const userEmail = row[1].trim();
     const userCategory = row[2].trim();
 
-    const subject = `Your Daily ${userCategory} Newsletter`;
-    const htmlContent = buildNewsletterHTML(
-      userName,
-      userCategory,
-      unsentArticles.filter((article) => article.category === userCategory)
+    const userArticles = unsentArticles.filter(
+      (article) => article.category === userCategory
     );
-    const textContent = buildNewsletterText(
-      userName,
-      userCategory,
-      unsentArticles.filter((article) => article.category === userCategory)
-    );
+    const mailSentTo = [];
+    if (userArticles.length > 0) {
+      mailSentTo.push(userEmail);
+      const subject = `Your Daily ${userCategory} Newsletter`;
+      const htmlContent = buildNewsletterHTML(
+        userName,
+        userCategory,
+        userArticles
+      );
+      const textContent = buildNewsletterText(
+        userName,
+        userCategory,
+        userArticles
+      );
 
-    GmailApp.sendEmail(userEmail, subject, textContent, {
-      htmlBody: htmlContent,
-      name: "BiteBrief",
-    });
+      GmailApp.sendEmail(userEmail, subject, textContent, {
+        htmlBody: htmlContent,
+        name: "BiteBrief",
+      });
+    }
   });
 
-  Logger.log("Newsletter sent to: " + users.map((user) => user[1].trim()));
+  Logger.log("Newsletter sent to: " + mailSentTo);
 }
