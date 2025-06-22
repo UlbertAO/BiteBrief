@@ -8,6 +8,7 @@ function sendEmail(unsentArticles) {
   const headers = data[0];
   const users = data.slice(1);
 
+  let mailSentTo = [];
   users.forEach((row, index) => {
     const userName = row[0].trim();
     const userEmail = row[1].trim();
@@ -16,7 +17,7 @@ function sendEmail(unsentArticles) {
     const userArticles = unsentArticles.filter(
       (article) => article.category === userCategory
     );
-    const mailSentTo = [];
+
     if (userArticles.length > 0) {
       mailSentTo.push(userEmail);
       const subject = `Your Daily ${userCategory} Newsletter`;
