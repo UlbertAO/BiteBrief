@@ -19,16 +19,17 @@ function sendEmail(unsentArticles) {
       userCategory,
       unsentArticles.filter((article) => article.category === userCategory)
     );
-
-    GmailApp.sendEmail(
-      userEmail,
-      subject,
-      "This is a fallback plain text version of the newsletter.",
-      {
-        htmlBody: htmlContent,
-      }
+    const textContent = buildNewsletterText(
+      userName,
+      userCategory,
+      unsentArticles.filter((article) => article.category === userCategory)
     );
+
+    GmailApp.sendEmail(userEmail, subject, textContent, {
+      htmlBody: htmlContent,
+      name: "BiteBrief",
+    });
   });
 
-  Logger.log("Newsletter sent to: " + users.map(user => user[1].trim()));
+  Logger.log("Newsletter sent to: " + users.map((user) => user[1].trim()));
 }
