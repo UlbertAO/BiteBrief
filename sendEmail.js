@@ -1,18 +1,19 @@
 function sendEmail(unsentArticles) {
-  const spreadsheetId =
-    PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+  const spreadsheetId = PropertiesService.getScriptProperties().getProperty(
+    "USER_SPREADSHEET_ID"
+  );
   const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
 
-  const usersSheet = spreadsheet.getSheetByName("Users");
+  const usersSheet = spreadsheet.getSheetByName("Submissions");
   const data = usersSheet.getDataRange().getValues();
   const headers = data[0];
   const users = data.slice(1);
 
   let mailSentTo = [];
   users.forEach((row, index) => {
-    const userName = row[0].trim();
-    const userEmail = row[1].trim();
-    const userCategory = row[2].trim();
+    const userName = row[1].trim();
+    const userEmail = row[2].trim();
+    const userCategory = row[3].trim();
 
     const userArticles = unsentArticles.filter(
       (article) => article.category === userCategory

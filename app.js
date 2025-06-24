@@ -5,8 +5,9 @@ function app() {
 
     // fetch articles from Google Sheets and summarize them usin gemini, openai, deepseek
     // assuming articles tht are not sent are not summarised
-    const spreadsheetId =
-      PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+    const spreadsheetId = PropertiesService.getScriptProperties().getProperty(
+      "NEWSLETTER_SPREADSHEET_ID"
+    );
     const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
 
     const sheet = spreadsheet.getSheetByName("Articles");

@@ -1,6 +1,7 @@
 function fetchNewsArticlesFromNewsAPILatest() {
-  const spreadsheetId =
-    PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+  const spreadsheetId = PropertiesService.getScriptProperties().getProperty(
+    "NEWSLETTER_SPREADSHEET_ID"
+  );
   const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
 
   const sheet = spreadsheet.getSheetByName("Articles");
@@ -14,11 +15,16 @@ function fetchNewsArticlesFromNewsAPILatest() {
     .map((value) => (typeof value === "string" ? value.trim() : value))
     .filter((value) => typeof value === "string" && value.length > 0);
 
+  const userSpreadsheetId = PropertiesService.getScriptProperties().getProperty(
+    "USER_SPREADSHEET_ID"
+  );
+  const userSpreadsheet = SpreadsheetApp.openById(userSpreadsheetId);
+
   const userSubscribedCategories = [
     ...new Set(
-      spreadsheet
-        .getSheetByName("Users")
-        .getRange("C2:C")
+      userSpreadsheet
+        .getSheetByName("Submissions")
+        .getRange("D2:D")
         .getValues()
         .flat()
         .map((value) => (typeof value === "string" ? value.trim() : value))

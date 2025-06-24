@@ -1,6 +1,7 @@
 function fetchArticlesFromSheet() {
-  const spreadsheetId =
-    PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID");
+  const spreadsheetId = PropertiesService.getScriptProperties().getProperty(
+    "NEWSLETTER_SPREADSHEET_ID"
+  );
   const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
   const sheet = spreadsheet.getSheetByName("Articles");
 
