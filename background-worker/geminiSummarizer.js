@@ -69,7 +69,7 @@ URL: ${article.url}`;
     }
   } catch (e) {
     Logger.log("Error during API call: " + e.toString());
-    throw e;
+    // throw e;
     // return "Error: Exception during API call.";
   }
 }
