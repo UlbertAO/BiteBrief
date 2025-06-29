@@ -1,31 +1,38 @@
-## Use CLASP (Command Line Apps Script Projects)
+# BiteBrief Background Worker
 
-CLASP is the official Google tool for developing Apps Script projects locally with your favorite editor, and it integrates seamlessly with Git and GitHub.
+## Purpose
 
-Workflow: - Install CLASP (npm i -g @google/clasp). - Clone your Apps Script project locally using CLASP. - Use Git locally to manage versions and push to GitHub. - Use clasp push to sync changes from your local repo to your Google Drive Apps Script project, and clasp pull to fetch updates from Drive. - This allows you to use GitHub for version control and collaboration, and Google Drive remains the source for deployment and execution
+The background worker automates the process of fetching news articles, summarizing them using AI, and sending personalized newsletters to subscribers.
 
-1. Authenticate CLASP with Your Google Account
+## How It Works
 
-   ```
-   clasp login
-   ```
+- Reads user preferences from the `Submissions` sheet.
+- Fetches the latest news articles for each category from external APIs (NEWSAPI).
+- Summarizes articles using Gemini.
+- Builds personalized newsletter content (HTML and plain text).
+- Sends emails to users via GmailApp.
+- Marks articles as "sent" to avoid duplicates.
 
-   This will open a browser window for you to log in and authorize CLASP to access your Google Apps Script projects
+## Triggers
 
-2. Before using CLASP, ensure the Apps Script API is enabled for your account. Go to your Apps Script dashboard, open Settings, and enable the API if it’s not already active
-3. Get Your Script ID, Open your Apps Script project in the browser. Go to Project Settings
-4. Clone the Project Locally
-   ```
-   clasp clone <SCRIPT_ID>
-   ```
-5. Make Changes Locally
-6. Push Changes Back to Apps Script
-   ```
-   clasp push
-   ```
-7. Use Git for Version Control
-   ```
-    git init
-    git add .
-    git commit -m "Initial commit"
-   ```
+- Can be run manually from the Apps Script Editor.
+- Recommended: Set up a **time-based trigger** (e.g., daily) for automated operation.
+
+## Expected Google Sheet Structure
+
+- **Submissions Sheet** (user data)
+  - `Timestamp`, `Name`, `Email`, `Categories`
+- **Categories Sheet**
+  - Column B: List of available categories
+- **Articles Sheet**
+  - `URL`, `Title`, `Description`, `ImageURL`, `PublishedAt`, `Summary`, `Category`, `IsMailSent`
+
+## Logging & Status Tracking
+
+- Uses Apps Script `Logger.log()` for process tracking.
+- Articles are marked as sent by setting `IsMailSent` to `TRUE` in the sheet.
+
+## Email Templates & Logic
+
+- Email content is generated in `buildNewsletterHTML.js` and `buildNewsletterText.js`.
+- Templates can be customized by editing these files.
