@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base target="_top" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BiteBrief - AI-Powered Newsletter Service</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23667eea'/><stop offset='100%' stop-color='%23764ba2'/></linearGradient></defs><rect width='100' height='100' rx='15' fill='url(%23grad)'/><text x='50%' y='70%' font-family='Poppins, Arial, sans-serif' font-size='60' font-weight='bold' text-anchor='middle' fill='white'>BB</text></svg>"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Choices.js CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --dark-bg: #0f0f23;
+        --card-bg: rgba(255, 255, 255, 0.1);
+        --text-primary: #ffffff;
+        --text-secondary: #a0a9c0;
+        --neon-blue: #00d4ff;
+        --neon-purple: #b849ff;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--dark-bg);
+        color: var(--text-primary);
+        overflow-x: hidden;
+        line-height: 1.6;
+      }
+
+      /* Dynamic Animated Background */
+      .animated-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: radial-gradient(
+          ellipse at center,
+          #0f0f23 0%,
+          #1a1a3a 50%,
+          #0f0f23 100%
+        );
+        overflow: hidden;
+      }
+
+      .animated-bg::before {
+        content: "";
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: -50%;
+        left: -50%;
+        background: radial-gradient(
+            circle at 25% 25%,
+            rgba(0, 212, 255, 0.15) 0%,
+            transparent 25%
+          ),
+          radial-gradient(
+            circle at 75% 75%,
+            rgba(184, 73, 255, 0.15) 0%,
+            transparent 25%
+          ),
+          radial-gradient(
+            circle at 50% 50%,
+            rgba(103, 126, 234, 0.1) 0%,
+            transparent 30%
+          );
+        animation: rotateBackground 30s linear infinite;
+      }
+
+      .animated-bg::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: linear-gradient(
+          45deg,
+          rgba(0, 212, 255, 0.05) 0%,
+          transparent 50%,
+          rgba(184, 73, 255, 0.05) 100%
+        );
+        animation: slideBackground 25s ease-in-out infinite alternate;
+      }
+
+      /* Floating Particles */
+      .particle {
+        position: absolute;
+        background: rgba(0, 212, 255, 0.6);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: floatParticle 15s infinite linear;
+      }
+
+      .particle:nth-child(odd) {
+        background: rgba(184, 73, 255, 0.6);
+        animation-duration: 20s;
+      }
+
+      .particle:nth-child(3n) {
+        background: rgba(103, 126, 234, 0.4);
+        animation-duration: 25s;
+      }
+
+      @keyframes rotateBackground {
+        0% {
+          transform: rotate(0deg) scale(1);
+        }
+        50% {
+          transform: rotate(180deg) scale(1.1);
+        }
+        100% {
+          transform: rotate(360deg) scale(1);
+        }
+      }
+
+      @keyframes slideBackground {
+        0% {
+          transform: translateX(-10%) translateY(-5%);
+        }
+        100% {
+          transform: translateX(10%) translateY(5%);
+        }
+      }
+
+      @keyframes floatParticle {
+        0% {
+          transform: translateY(100vh) translateX(0px) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100px) translateX(100px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Landing Section */
+      .landing-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .landing-content {
+        z-index: 2;
+        text-align: center;
+        padding: 2rem 0;
+      }
+
+      .logo {
+        font-family: "Poppins", sans-serif;
+        font-size: 4rem;
+        font-weight: 700;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        animation: glow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes glow {
+        from {
+          filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.5));
+        }
+        to {
+          filter: drop-shadow(0 0 30px rgba(102, 126, 234, 0.8));
+        }
+      }
+
+      .tagline {
+        font-size: 1.5rem;
+        font-weight: 300;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Typewriter effect styles */
+      .typewriter-text {
+        display: inline-block;
+        position: relative;
+        color: var(--text-primary);
+      }
+
+      .typewriter-cursor {
+        display: inline-block;
+        width: 3px;
+        height: 1em;
+        background: var(--neon-purple);
+        animation: blink 0.7s infinite;
+        margin-left: 2px;
+        vertical-align: middle;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      .landing-cta {
+        background: var(--primary-gradient);
+        border: none;
+        padding: 1rem 3rem;
+        border-radius: 50px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: white;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .landing-cta:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        color: white;
+      }
+
+      .landing-cta::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .landing-cta:hover::before {
+        left: 100%;
+      }
+
+      /* Floating Elements */
+      .floating-element {
+        position: absolute;
+        border-radius: 50%;
+        background: var(--accent-gradient);
+        opacity: 0.1;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .floating-element:nth-child(1) {
+        width: 80px;
+        height: 80px;
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+      }
+
+      .floating-element:nth-child(2) {
+        width: 120px;
+        height: 120px;
+        top: 60%;
+        right: 10%;
+        animation-delay: 2s;
+      }
+
+      .floating-element:nth-child(3) {
+        width: 60px;
+        height: 60px;
+        bottom: 20%;
+        left: 20%;
+        animation-delay: 4s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(180deg);
+        }
+      }
+
+      /* Features Section */
+      .features-section {
+        padding: 8rem 0;
+        position: relative;
+      }
+
+      .section-title {
+        text-align: center;
+        font-size: 3rem;
+        font-weight: 600;
+        margin-bottom: 4rem;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .feature-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 2.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .feature-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--primary-gradient);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .feature-card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        background: var(--secondary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .feature-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+      }
+
+      .feature-description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      /* Form Section */
+      .form-section {
+        padding: 8rem 0;
+        background: rgba(255, 255, 255, 0.02);
+        position: relative;
+      }
+
+      .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: var(--card-bg);
+        backdrop-filter: blur(20px);
+        padding: 3rem;
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      }
+
+      .form-title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .form-control {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        padding: 1rem;
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        color: var(--text-primary);
+      }
+
+      .form-control::placeholder {
+        color: var(--text-secondary);
+      }
+
+      .form-label {
+        color: var(--text-primary);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary-gradient);
+        border: none;
+        border-radius: 15px;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+
+      /* Testimonial Section */
+      .testimonial-section {
+        padding: 6rem 0;
+        text-align: center;
+      }
+
+      .testimonial-card {
+        max-width: 800px;
+        margin: 0 auto;
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 3rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .testimonial-text {
+        font-size: 1.3rem;
+        font-style: italic;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        line-height: 1.8;
+      }
+
+      .testimonial-author {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--neon-blue);
+      }
+
+      /* Footer */
+      .footer {
+        padding: 4rem 0 2rem;
+        text-align: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-content {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .social-links {
+        margin-bottom: 2rem;
+      }
+
+      .social-link {
+        display: inline-block;
+        margin: 0 1rem;
+        color: var(--neon-blue);
+        font-size: 1.2rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      .social-link:hover {
+        color: var(--neon-purple);
+        transform: translateY(-3px);
+      }
+
+      .footer-text {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+      }
+
+      .footer-love {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      /* Alert Styling */
+      .alert {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        color: var(--text-primary);
+        margin-top: 1rem;
+      }
+
+      .alert-success {
+        border-left: 4px solid #28a745;
+      }
+
+      .alert-danger {
+        border-left: 4px solid #dc3545;
+      }
+
+      /* Choices.js Styling */
+      .choices {
+        margin-bottom: 1rem;
+      }
+
+      .choices__inner {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        color: var(--text-primary);
+        padding: 1rem;
+        min-height: auto;
+      }
+
+      .choices__input {
+        background: transparent;
+        color: var(--text-primary) !important;
+        font-size: 1rem;
+      }
+
+      .choices__input::placeholder {
+        color: var(--text-secondary) !important;
+      }
+
+      .choices__placeholder {
+        color: var(--text-secondary) !important;
+        opacity: 1;
+      }
+
+      .choices__item {
+        color: var(--text-primary) !important;
+        background: transparent;
+      }
+
+      .choices__item--choice {
+        color: var(--text-primary) !important;
+        background: transparent;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+      }
+
+      .choices__item--selectable {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .choices__item--selectable:hover,
+      .choices__item--selectable.is-highlighted {
+        background: rgba(102, 126, 234, 0.3) !important;
+        color: var(--text-primary) !important;
+      }
+
+      .choices__dropdown {
+        background: rgba(15, 15, 35, 0.95) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(20px);
+        z-index: 1000;
+      }
+
+      .choices__list--dropdown {
+        background: rgba(15, 15, 35, 0.95) !important;
+        border-radius: 10px;
+      }
+
+      .choices__list--dropdown .choices__item {
+        background: transparent !important;
+      }
+
+      .choices__list--dropdown .choices__item--selectable {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.2s ease;
+      }
+
+      .choices__list--dropdown .choices__item--selectable:last-child {
+        border-bottom: none;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+
+      .choices__list--dropdown .choices__item--selectable:first-child {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+
+      /* Ensure dropdown appears above other elements */
+      .choices.is-open .choices__dropdown {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+      }
+
+      /* Fix focus and active states */
+      .choices.is-focused .choices__inner {
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+      }
+
+      .choices__item--selected {
+        background: var(--primary-gradient) !important;
+        color: white !important;
+        border-radius: 8px;
+        margin: 0.25rem;
+        padding: 0.5rem 0.75rem;
+        font-weight: 500;
+      }
+
+      .choices__button {
+        border: none !important;
+        color: white !important;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        margin-left: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        position: relative;
+        opacity: 1 !important;
+      }
+      .choices__button::after {
+        content: "×";
+        display: block;
+        font-size: 16px;
+        line-height: 1;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white !important;
+        font-weight: bold;
+      }
+
+      .choices[data-type*="select-multiple"] .choices__inner {
+        cursor: pointer;
+      }
+
+      .choices__list--multiple .choices__item {
+        background: var(--primary-gradient) !important;
+        border: none !important;
+        color: white !important;
+        border-radius: 8px;
+        margin: 0.25rem;
+        padding: 0.5rem 0.75rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .logo {
+          font-size: 3rem;
+        }
+
+        .tagline {
+          font-size: 1.2rem;
+          padding: 0 1rem;
+        }
+
+        .landing-cta {
+          padding: 0.8rem 2rem;
+          font-size: 1rem;
+        }
+
+        .section-title {
+          font-size: 2rem;
+          padding: 0 1rem;
+        }
+
+        .form-container {
+          margin: 0 1rem;
+          padding: 2rem;
+        }
+
+        .form-title {
+          font-size: 2rem;
+        }
+
+        .feature-card {
+          margin-bottom: 2rem;
+        }
+      }
+
+      /* Scroll Animations */
+      .fade-in-up {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease;
+      }
+
+      .fade-in-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Category Error Styling */
+      .text-danger {
+        color: #dc3545 !important;
+      }
+
+      /* Smooth Scrolling */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Interactive Mouse Effects */
+      .mouse-glow {
+        position: fixed;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(
+          circle,
+          rgba(0, 212, 255, 0.1) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 1;
+        transition: all 0.1s ease;
+        mix-blend-mode: screen;
+      }
+
+      /* Enhanced Floating Elements */
+      .floating-element {
+        position: absolute;
+        border-radius: 50%;
+        background: linear-gradient(
+          45deg,
+          rgba(0, 212, 255, 0.2),
+          rgba(184, 73, 255, 0.2)
+        );
+        opacity: 0.6;
+        animation: float3D 8s ease-in-out infinite;
+        backdrop-filter: blur(2px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      @keyframes float3D {
+        0%,
+        100% {
+          transform: translateY(0px) translateX(0px) rotateX(0deg) rotateY(0deg)
+            scale(1);
+          box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+        25% {
+          transform: translateY(-20px) translateX(10px) rotateX(10deg)
+            rotateY(15deg) scale(1.1);
+          box-shadow: 0 20px 40px rgba(184, 73, 255, 0.3);
+        }
+        50% {
+          transform: translateY(-40px) translateX(-5px) rotateX(-5deg)
+            rotateY(-10deg) scale(0.9);
+          box-shadow: 0 15px 35px rgba(103, 126, 234, 0.25);
+        }
+        75% {
+          transform: translateY(-20px) translateX(-15px) rotateX(15deg)
+            rotateY(20deg) scale(1.05);
+          box-shadow: 0 25px 45px rgba(0, 212, 255, 0.2);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Dynamic Animated Background -->
+    <div class="animated-bg">
+      <div
+        class="particle"
+        style="width: 4px; height: 4px; left: 10%; animation-delay: 0s"
+      ></div>
+      <div
+        class="particle"
+        style="width: 6px; height: 6px; left: 20%; animation-delay: 2s"
+      ></div>
+      <div
+        class="particle"
+        style="width: 3px; height: 3px; left: 30%; animation-delay: 4s"
+      ></div>
+      <div
+        class="particle"
+        style="width: 5px; height: 5px; left: 40%; animation-delay: 6s"
+      ></div>
+      <div
+        class="particle"
+        style="width: 4px; height: 4px; left: 50%; animation-delay: 8s"
+      ></div>
+      <div
+        class="particle"
+        style="width: 7px; height: 7px; left: 60%; animation-delay: 10s"
+      ></div>
+      <div
+        class="particle"
+        style="width: 3px; height: 3px; left: 70%; animation-delay: 12s"
+      ></div>
+      <div
+        class="particle"
+        style="width: 5px; height: 5px; left: 80%; animation-delay: 14s"
+      ></div>
+      <div
+        class="particle"
+        style="width: 4px; height: 4px; left: 90%; animation-delay: 16s"
+      ></div>
+      <div
+        class="particle"
+        style="width: 6px; height: 6px; left: 15%; animation-delay: 18s"
+      ></div>
+    </div>
+
+    <!-- Interactive Mouse Glow Effect -->
+    <div class="mouse-glow" id="mouseGlow"></div>
+
+    <!-- Landing Section -->
+    <section class="landing-section">
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+
+      <div class="container">
+        <div class="landing-content fade-in-up">
+          <h1 class="logo">BiteBrief</h1>
+          <!-- <p class="tagline">Get Personalized Daily News in Your Inbox</p> -->
+          <p class="tagline">Smarter News. Zero Effort. $0</p>
+          <p class="tagline">
+            <span class="typewriter-text" id="typewriter"></span
+            ><span class="typewriter-cursor"></span>
+          </p>
+          <a href="#subscribe" class="landing-cta">
+            <i class="fas fa-rocket me-2"></i>Subscribe Now
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="container">
+        <h2 class="section-title fade-in-up">Why Choose BiteBrief?</h2>
+        <div class="row g-4">
+          <div class="col-lg-3 col-md-6">
+            <div class="feature-card fade-in-up">
+              <div class="feature-icon">
+                <i class="fas fa-robot"></i>
+              </div>
+              <h3 class="feature-title">AI - Curated Content</h3>
+              <p class="feature-description">
+                AI algorithms curate the most relevant news articles based on
+                your interests and preferences.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="feature-card fade-in-up">
+              <div class="feature-icon">
+                <i class="fas fa-bolt"></i>
+              </div>
+              <h3 class="feature-title">Personalized & Punctual</h3>
+              <p class="feature-description">
+                Pick the topics you love — we’ll deliver bite-sized, AI-curated
+                news straight to your inbox every day.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="feature-card fade-in-up">
+              <div class="feature-icon">
+                <i class="fas fa-gift"></i>
+              </div>
+              <h3 class="feature-title">Completely Free</h3>
+              <p class="feature-description">
+                Enjoy premium newsletter service without any subscription fees.
+                Forever free, no hidden costs.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="feature-card fade-in-up">
+              <div class="feature-icon">
+                <i class="fas fa-cube"></i>
+              </div>
+              <h3 class="feature-title">Zero Effort, Max Value</h3>
+              <p class="feature-description">
+                No scrolling. No searching. Just the latest, most important
+                headlines ready when you are.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="form-section" id="subscribe">
+      <div class="container">
+        <div class="form-container fade-in-up">
+          <h2 class="form-title">Start Your Free Newsletter</h2>
+
+          <form id="userForm">
+            <div class="mb-3">
+              <label for="name" class="form-label">
+                <i class="fas fa-user me-2"></i>Full Name
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                name="name"
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">
+                <i class="fas fa-envelope me-2"></i>Email Address
+              </label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="Enter your email address"
+                required
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="categoriesSelect" class="form-label">
+                <i class="fas fa-tags me-2"></i>Categories of Interest (Select
+                up to 1)
+              </label>
+              <select
+                id="categoriesSelect"
+                name="categories"
+                class="form-select"
+                multiple
+                required
+              >
+                <!-- Options will be dynamically added -->
+              </select>
+              <div
+                class="form-text text-danger"
+                id="categoryError"
+                style="display: none"
+              >
+                You can select up to 1 categories only.
+              </div>
+            </div>
+
+            <button type="submit" class="btn submit-btn">
+              <i class="fas fa-paper-plane me-2"></i>Subscribe to BiteBrief
+            </button>
+          </form>
+
+          <div
+            id="messageAlert"
+            class="alert alert-dismissible fade show"
+            style="display: none"
+          >
+            <span id="messageText"></span>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonial Section -->
+    <!-- <section class="testimonial-section">
+      <div class="container">
+        <div class="testimonial-card fade-in-up">
+          <p class="testimonial-text">
+            "text"
+          </p>
+          <div class="testimonial-author">name,</div>
+        </div>
+      </div>
+    </section> -->
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content fade-in-up">
+          <div class="social-links">
+            <a href="https://x.com/ulbert_" class="social-link" target="_blank">
+              <i class="fab fa-x-twitter"></i> @ulbert_
+            </a>
+          </div>
+          <p class="footer-text">
+            Stay connected with us for updates and support
+          </p>
+          <p class="footer-love">
+            Built with <i class="fas fa-heart" style="color: #ff6b6b"></i>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+    <script>
+      let choices;
+
+      const typewriterElement = document.getElementById("typewriter");
+      const words = ["Short.", "Punchy.", "Powerful."];
+      let wordIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+      let typingSpeed = 150;
+
+      function typeWriter() {
+        const currentWord = words[wordIndex];
+
+        if (isDeleting) {
+          typewriterElement.textContent = currentWord.substring(
+            0,
+            charIndex - 1
+          );
+          charIndex--;
+          typingSpeed = 50;
+        } else {
+          typewriterElement.textContent = currentWord.substring(
+            0,
+            charIndex + 1
+          );
+          charIndex++;
+          typingSpeed = charIndex === currentWord.length ? 1000 : 150;
+        }
+
+        if (!isDeleting && charIndex === currentWord.length) {
+          isDeleting = true;
+          typingSpeed = 1000;
+        } else if (isDeleting && charIndex === 0) {
+          isDeleting = false;
+          wordIndex = (wordIndex + 1) % words.length;
+          typingSpeed = 500;
+        }
+
+        setTimeout(typeWriter, typingSpeed);
+      }
+      window.addEventListener("load", () => {
+        setTimeout(typeWriter, 1000);
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize interactive effects
+        initInteractiveEffects();
+
+        // Initialize scroll animations
+        initScrollAnimations();
+
+        // Hide the google app script warning initially
+        document
+          .querySelectorAll("tr > td > #warning")
+          .forEach(function (elem) {
+            elem.style.display = "none";
+          });
+
+        // Initialize choices on the select element
+        choices = new Choices("#categoriesSelect", {
+          removeItemButton: true,
+          maxItemCount: 1,
+          placeholder: true,
+          placeholderValue: "Select categories",
+          searchEnabled: true,
+          classNames: {
+            containerOuter: "choices",
+            containerInner: "choices__inner",
+            input: "choices__input",
+            inputCloned: "choices__input--cloned",
+            list: "choices__list",
+            listItems: "choices__list--multiple",
+            listSingle: "choices__list--single",
+            listDropdown: "choices__list--dropdown",
+            item: "choices__item",
+            itemSelectable: "choices__item--selectable",
+            itemDisabled: "choices__item--disabled",
+            itemChoice: "choices__item--choice",
+            placeholder: "choices__placeholder",
+            group: "choices__group",
+            groupHeading: "choices__heading",
+            button: "choices__button",
+            activeState: "is-active",
+            focusState: "is-focused",
+            openState: "is-open",
+            disabledState: "is-disabled",
+            highlightedState: "is-highlighted",
+            selectedState: "is-selected",
+            flippedState: "is-flipped",
+            loadingState: "is-loading",
+            noResults: "has-no-results",
+            noChoices: "has-no-choices",
+          },
+        });
+
+        document
+          .getElementById("categoriesSelect")
+          .addEventListener("change", function () {
+            const selectedCategories = Array.from(
+              document.getElementById("categoriesSelect").selectedOptions
+            ).map((opt) => opt.value);
+            choices.input.element.placeholder =
+              selectedCategories.length > 0 ? "" : "Select categories";
+          });
+        // Load categories from server
+        google.script.run
+          .withSuccessHandler(populateCategories)
+          .withFailureHandler(showError)
+          .getCategories();
+
+        const categoryError = document.getElementById("categoryError");
+
+        // Form submission handler
+        document
+          .getElementById("userForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const selectedCategories = Array.from(
+              document.getElementById("categoriesSelect").selectedOptions
+            ).map((opt) => opt.value);
+
+            const form = e.target;
+            const formData = {
+              name: form.name.value.trim(),
+              email: form.email.value.trim(),
+              categories: selectedCategories || [],
+            };
+
+            if (!formData.name || !formData.email) {
+              showMessage("Please fill in all required fields", "danger");
+              return;
+            }
+
+            if (formData.categories.length === 0) {
+              showMessage("Please select at least one category", "danger");
+              return;
+            }
+
+            if (formData.categories.length > 1) {
+              categoryError.style.display = "block";
+              return;
+            } else {
+              categoryError.style.display = "none";
+            }
+
+            // Disable submit button during processing
+            const submitBtn = form.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML =
+              '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+
+            // Send data to server
+            google.script.run
+              .withSuccessHandler(function (response) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML =
+                  '<i class="fas fa-paper-plane me-2"></i>Subscribe to BiteBrief';
+                if (response.success) {
+                  showMessage(response.message, "success");
+                  form.reset();
+                  // Clears all selected values
+                  choices.removeActiveItems();
+                } else {
+                  showMessage(response.message, "danger");
+                }
+              })
+              .withFailureHandler(function (error) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML =
+                  '<i class="fas fa-paper-plane me-2"></i>Subscribe to BiteBrief';
+                showMessage(
+                  "Error submitting form: " + error.message,
+                  "danger"
+                );
+              })
+              .saveFormData(formData);
+          });
+
+        // Smooth scrolling for CTA button
+        document
+          .querySelector(".landing-cta")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            document.querySelector("#subscribe").scrollIntoView({
+              behavior: "smooth",
+            });
+          });
+      });
+
+      function populateCategories(categories) {
+        // Refresh choices after adding options
+        choices.setChoices(
+          categories.map((cat) => ({ value: cat, label: cat })),
+          "value",
+          "label",
+          true
+        );
+      }
+
+      function showMessage(message, type) {
+        const alert = document.getElementById("messageAlert");
+        const messageText = document.getElementById("messageText");
+
+        alert.style.display = "block";
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        messageText.textContent = message;
+
+        setTimeout(() => {
+          alert.style.display = "none";
+        }, 5000);
+      }
+
+      function showError(error) {
+        showMessage("Error loading form: " + error.message, "danger");
+      }
+
+      function initInteractiveEffects() {
+        // Mouse glow effect
+        const mouseGlow = document.getElementById("mouseGlow");
+
+        document.addEventListener("mousemove", (e) => {
+          mouseGlow.style.left = e.clientX - 100 + "px";
+          mouseGlow.style.top = e.clientY - 100 + "px";
+        });
+
+        // Add more floating particles dynamically
+        const animatedBg = document.querySelector(".animated-bg");
+
+        setInterval(() => {
+          if (document.querySelectorAll(".particle").length < 20) {
+            const particle = document.createElement("div");
+            particle.className = "particle";
+            particle.style.width = Math.random() * 5 + 2 + "px";
+            particle.style.height = particle.style.width;
+            particle.style.left = Math.random() * 100 + "%";
+            particle.style.animationDelay = "0s";
+            particle.style.animationDuration = Math.random() * 10 + 10 + "s";
+            animatedBg.appendChild(particle);
+
+            // Remove particle after animation
+            setTimeout(() => {
+              if (particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+              }
+            }, 25000);
+          }
+        }, 3000);
+
+        // Interactive floating elements
+        const floatingElements = document.querySelectorAll(".floating-element");
+        floatingElements.forEach((element, index) => {
+          element.addEventListener("mouseenter", () => {
+            element.style.transform = "scale(1.2) rotateY(20deg)";
+            element.style.boxShadow = "0 20px 40px rgba(0, 212, 255, 0.4)";
+          });
+
+          element.addEventListener("mouseleave", () => {
+            element.style.transform = "";
+            element.style.boxShadow = "";
+          });
+        });
+      }
+
+      // Scroll animations function
+      function initScrollAnimations() {
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px",
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        }, observerOptions);
+
+        // Observe all fade-in-up elements
+        document.querySelectorAll(".fade-in-up").forEach((el) => {
+          observer.observe(el);
+        });
+      }
+
+      // Add some interactive hover effects
+      document.addEventListener("mousemove", function (e) {
+        const cards = document.querySelectorAll(".feature-card");
+        cards.forEach((card) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+            const xPercent = (x / rect.width - 0.5) * 2;
+            const yPercent = (y / rect.height - 0.5) * 2;
+
+            card.style.transform = `perspective(1000px) rotateY(${
+              xPercent * 5
+            }deg) rotateX(${-yPercent * 5}deg) translateY(-10px)`;
+          }
+        });
+      });
+
+      // Reset card transforms when mouse leaves
+      document.querySelectorAll(".feature-card").forEach((card) => {
+        card.addEventListener("mouseleave", function () {
+          this.style.transform =
+            "perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(0px)";
+        });
+      });
+    </script>
+  </body>
+</html>
